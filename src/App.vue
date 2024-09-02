@@ -1,25 +1,32 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <v-app>
+    <sidebar>
+      <RouterView />
+    </sidebar>
+  </v-app>
 </template>
 
+<script>
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import sidebar from './components/Layouts/Sidebar.vue'
+export default {
+  setup() {
+    const router = useRouter();
+    const auth = getAuth();
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push({ name: 'login' });
+      }
+    });
+
+    return {
+      router,
+    };
+  },
+};
+</script>
 <style scoped>
 header {
   line-height: 1.5;
@@ -32,7 +39,7 @@ header {
 }
 
 nav {
-  width: 100%;
+  width: 100px;
   font-size: 12px;
   text-align: center;
   margin-top: 2rem;
