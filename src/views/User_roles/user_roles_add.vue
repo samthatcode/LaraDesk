@@ -154,10 +154,12 @@
   </template>
     
     <script>
-        import { useToast } from 'vue-toastification'
-        import { auth, db, createUserWithEmailAndPassword } from '../../firebase'
-        import { doc, setDoc } from 'firebase/firestore' // <-- Import setDoc and doc
-        import { RouterLink } from 'vue-router'
+
+      import { useToast } from 'vue-toastification'
+      import { auth, db } from '../../firebase'
+      import { createUserWithEmailAndPassword } from 'firebase/auth';
+      import { doc, setDoc } from 'firebase/firestore' // <-- Import setDoc and doc
+      import { RouterLink } from 'vue-router'
   
         export default {
           data() {

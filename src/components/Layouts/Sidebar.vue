@@ -8,17 +8,27 @@
         app
         style="box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border-bottom: 1px solid #e0e0e0;"
       >
+        <!-- Toggle Icon for Small Screens -->
         <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!$vuetify.display.mdAndUp"></v-app-bar-nav-icon>
-        <v-toolbar-title v-if="$vuetify.display.mdAndUp">
+  
+        <!-- Logo Section -->
+        <v-toolbar-title
+          v-if="$vuetify.display.mdAndUp"
+        >
           LARADESK
         </v-toolbar-title>
-        <v-spacer></v-spacer>
+  
+        <v-spacer>
+          <button @click="logout">Sign Out</button>
+        </v-spacer>
+  
+        <!-- User Profile Icon -->
         <v-avatar size="32">
           <img src="https://cdn.vuetifyjs.com/images/john.png" alt="Avatar">
         </v-avatar>
       </v-app-bar>
   
-      <!-- Sidebar -->
+      <!-- Sidebar (Navigation Drawer) -->
       <v-navigation-drawer
         v-model="drawer"
         app
@@ -29,23 +39,26 @@
         dark
       >
         <v-list>
+          <!-- General Section -->
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="text-uppercase text-xs text-muted">General</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
   
-          <v-list-item v-for="item in generalItems" :key="item.title" :to="{ name: item.route }" link>
-            <v-list-item-content style="display: flex; align-items: center;">
-              <v-icon style="font-size: 16px; color: #b0bec5; margin-right: 8px;">
-                {{ item.icon }}
-              </v-icon>
-              <v-list-item-title style="font-size: 14px; color: #eceff1;">
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
+          <v-list-item v-for="item in generalItems" :key="item.title" :to="{ name: item.routeName }" link>
+              <v-list-item-content style="display: flex; align-items: center;">
+                  <v-icon style="font-size: 16px; color: #b0bec5; margin-right: 8px;">
+                      {{ item.icon }}
+                  </v-icon>
+                  <v-list-item-title style="font-size: 14px; color: #eceff1;">
+                      {{ item.title }}
+                  </v-list-item-title>
+              </v-list-item-content>
           </v-list-item>
+
   
+          <!-- Administration Section -->
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title class="text-uppercase text-xs text-muted">Administration</v-list-item-title>
@@ -68,39 +81,24 @@
       <!-- Main Content -->
       <v-main>
         <v-container fluid>
-          <div class="priority-section">
-            <h1>Priorities</h1>
-            <v-list>
-              <v-list-item
-                v-for="(priority, index) in priorities"
-                :key="index"
-                link
-                @click="navigateToPriority(priority)"
-              >
-                <v-list-item-content style="display: flex; align-items: center;">
-                  <span class="badge">{{ priority.number }}</span>
-                  <span class="priority-title">{{ priority.title }}</span>
-                  <v-list-item-icon>
-                    <v-icon class="priority-icon">mdi-chevron-right</v-icon>
-                  </v-list-item-icon>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </div>
+            <slot></slot>
         </v-container>
       </v-main>
     </v-app>
   </template>
   
   <script>
+  import { auth } from '../../firebase';
+  import { RouterLink } from 'vue-router';
+  
   export default {
     data() {
       return {
         drawer: true,
         generalItems: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard', route: "dashboard" },
-          { title: 'Tickets', icon: 'mdi-ticket-outline', route: "tickets" },
-          { title: 'Canned replies', icon: 'mdi-message-text-outline', route: "replies" },
+          { title: 'Dashboard', icon: 'mdi-view-dashboard', routeName: 'dashboard' },
+          { title: 'Tickets', icon: 'mdi-ticket-outline', routeName: 'tickets' },
+          { title: 'Canned replies', icon: 'mdi-message-text-outline', routeName: 'replies' },
         ],
         adminItems: [
           { title: 'Departments', icon: 'mdi-domain', route: 'admin/department' },
@@ -112,56 +110,90 @@
           { title: 'Settings', icon: 'mdi-cog-outline',route: 'dashboard/admin/settings' },
           { title: 'Translation', icon: 'mdi-translate',route: 'dashboard/admin/translate' },
         ],
-        priorities: [
-          { title: 'Minor', number: 2 },
-          { title: 'Medium', number: 4 },
-          { title: 'Major', number: 6 },
-          { title: 'Critical', number: 13 },
+        stats: [
+          { title: 'Open tickets', value: '45' },
+          { title: 'Pending tickets', value: '5' },
+          { title: 'Solved tickets', value: '91' },
+          { title: 'Without assign agent', value: '92' },
         ],
       };
     },
     methods: {
-      navigateToPriority(priority) {
-        this.$router.push({ name: 'edit_priorities', params: { priorityId: priority.number } });
-      }
-    },
+        async logout() {
+            try {
+                await auth.signOut();
+                this.$router.push('/login');
+            } catch (error) {
+                console.log(error.message);
+            }
+        }
+    }
   };
   </script>
   
   <style scoped>
-  .priority-section {
+  .dashboard {
     padding: 20px;
     background-color: #f5f7fb;
-    overflow: hidden; /* Ensures the section is not scrollable */
   }
   
-  .priority-section h1 {
+  h1 {
     font-size: 1.5rem;
     color: #34495e;
-    margin-bottom: 20px;
   }
   
-  .v-list-item-content {
+  .stat-card {
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24);
+  }
+  
+  .stat-card .v-card-title {
     font-size: 14px;
+    color: #7f8c8d;
+  }
+  
+  .stat-card .v-card-subtitle {
+    font-size: 2rem;
     color: #2c3e50;
   }
   
-  .badge {
-    background-color: #9adde2;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-size: 12px;
-    color: grey;
-    margin-right: 16px; /* Increased margin to add more space */
+  .chart-card {
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24);
   }
   
-  .priority-title {
-    flex-grow: 1;
+  .chart-placeholder {
+    width: 100%;
+    height: 300px;
+    background-color: #3498db;
+    border-radius: 5px;
   }
   
-  .priority-icon {
-    color: #b0bec5;
-    margin-left: auto; /* Moves the icon to the far right */
+  .v-navigation-drawer {
+    border-right: 1px solid #1c2025;
+  }
+  
+  .v-list-item-title {
+    font-weight: 500;
+  }
+  
+  .v-list-item-icon {
+    min-width: 36px;
+  }
+  
+  .v-list-item-title,
+  .v-list-item-icon {
+    display: flex;
+    align-items: center;
+  }
+  
+  .v-list-item-title {
+    color: #cfd8dc;
+    font-size: 14px;
+    padding-left: 8px;
   }
   </style>
-  

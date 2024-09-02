@@ -92,25 +92,6 @@
             <v-row >
                 <v-col>
                     <v-card>
-                        <!-- <v-card-title class="m-2">
-                            <div class="bg-white px-4 py-3 flex items-center justify-between border-b border-gray-200 sm:px-6">
-                                <div>
-                                    <label for="search" class="sr-only"></label>
-                                    <div class="flex rounded-md shadow-sm">
-                                        <div class="relative flex-grow focus-within:z-10">
-                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-event-none"></div>
-                                            <input type="text" id="search" placeholder="Search" class="form-input block w-full rounded-none rounded-l-md pl-10 text-sm transition">
-                                        </div>
-                                        <span class="relative inline-flex shadow-sm rounded-r-md">
-                                            <button type="button" class="relative-ml-px inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:z-10 focus-outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700">
-                                                <span class="ml-2">Sort</span>
-                                            </button>
-                                            <select name="" id="sortBy" class="ml-px block form-select w-full pl-3 pr-9 py-2 rounded-l-none rounded-r-md border border-gray-3 bg-white text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:z-10 focus-outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-100 active:text-gray-700 ease-in-out duration-150"></select>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </v-card-title> -->
                         <v-card-title>
                             <h1>Search</h1>
                         </v-card-title>
@@ -163,8 +144,9 @@
   </template>
   
   <script>
- import { db, auth, createUserWithEmailAndPassword } from '../../firebase';
- import { collection, getDocs } from 'firebase/firestore';
+  import { db, auth } from '../../firebase';
+  import { createUserWithEmailAndPassword } from 'firebase/auth'; // Import directly from firebase/auth
+  import { collection, getDocs } from 'firebase/firestore';
 
 
   export default {

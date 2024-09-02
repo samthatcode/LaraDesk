@@ -46,15 +46,15 @@
             </v-list-item-content>
           </v-list-item>
   
-          <v-list-item v-for="item in generalItems" :key="item.title" :to="{ name: item.route }" link>
-            <v-list-item-content style="display: flex; align-items: center;">
-              <v-icon style="font-size: 16px; color: #b0bec5; margin-right: 8px;">
-                {{ item.icon }}
-              </v-icon>
-              <v-list-item-title style="font-size: 14px; color: #eceff1;">
-                {{ item.title }}
-              </v-list-item-title>
-            </v-list-item-content>
+          <v-list-item v-for="item in generalItems" :key="item.title" :to="{ name: item.routeName }" link>
+              <v-list-item-content style="display: flex; align-items: center;">
+                  <v-icon style="font-size: 16px; color: #b0bec5; margin-right: 8px;">
+                      {{ item.icon }}
+                  </v-icon>
+                  <v-list-item-title style="font-size: 14px; color: #eceff1;">
+                      {{ item.title }}
+                  </v-list-item-title>
+              </v-list-item-content>
           </v-list-item>
 
   
@@ -81,37 +81,14 @@
       <!-- Main Content -->
       <v-main>
         <v-container fluid>
-          <div class="dashboard">
-            <v-row>
-              <v-col>
-                <h1>Dashboard</h1>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col v-for="stat in stats" :key="stat.title" cols="12" md="3">
-                <v-card class="stat-card">
-                  <v-card-title>{{ stat.title }}</v-card-title>
-                  <v-card-subtitle>{{ stat.value }}</v-card-subtitle>
-                </v-card>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-card class="chart-card">
-                  <v-card-title>Opened tickets this year</v-card-title>
-                  <div class="chart-placeholder">
-                  </div>
-                </v-card>
-              </v-col>
-            </v-row>
-          </div>
+          <router-view></router-view>
         </v-container>
       </v-main>
     </v-app>
   </template>
   
   <script>
-  import { auth } from '../firebase';
+  import { auth } from '../../firebase';
   import { RouterLink } from 'vue-router';
   
   export default {
@@ -119,9 +96,9 @@
       return {
         drawer: true,
         generalItems: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard', route: "dashboard" },
-          { title: 'Tickets', icon: 'mdi-ticket-outline', route: "tickets" },
-          { title: 'Canned replies', icon: 'mdi-message-text-outline', route: "replies" },
+          { title: 'Dashboard', icon: 'mdi-view-dashboard', routeName: 'dashboard' },
+          { title: 'Tickets', icon: 'mdi-ticket-outline', routeName: 'tickets' },
+          { title: 'Canned replies', icon: 'mdi-message-text-outline', routeName: 'replies' },
         ],
         adminItems: [
           { title: 'Departments', icon: 'mdi-domain', route: 'admin/department' },

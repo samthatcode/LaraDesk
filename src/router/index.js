@@ -3,8 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../components/Login.vue';
 import LandPage from '../components/LandPage.vue';
 import Signup from '../components/SignUp.vue';
-import Dashboard from '../components/Dashboard.vue';
-import Tickets from '../components/Tickets.vue';
+import Dashboard from '../components/Dashboard/Dashboard.vue';
+import DashboardContent from '../components/Dashboard/DashboardContent.vue';
+import Tickets from '../components/Ticket/Tickets.vue';
+import CreateTicket from '../components/Ticket/create_ticket.vue'
 import CannedReplies from '../components/CannedReplies.vue';
 import Departments from '../views/Departments/department.vue';
 import AddDept from '../views/Departments/add_dept.vue'
@@ -14,11 +16,15 @@ import UsersRoles from '../views/User_roles/user_roles.vue'
 import UsersRolesAdd from '../views/User_roles/user_roles_add.vue'
 import Label from '../views/Labels/label.vue'
 import priorities from '../views/priorities/priorities.vue'
+import EditPriorities from '../views/priorities/edit_priorities.vue'
 import Settings from '../views/Settings/settings.vue'
+import SettingsContent from '../views/Settings/settingsContent.vue'
+import General from '../views/Settings/general.vue'
+import Outgoing_mail from '../views/Settings/outgoing_mail.vue'
 import Translations from '../views/Translations/translations.vue'
 import statuses from '../views/Status/status.vue'
 import EditStatus from '../views/Status/edit_status.vue'
-import { auth } from '../firebase';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const routes = [
   {
@@ -46,16 +52,27 @@ const routes = [
     meta: { requiresAuth: true },
     children: [
       {
-        path: 'tickets',  // Change from '/dashboard/tickets' to 'tickets'
+        path: '',
+        name: 'dashboard',
+        component: DashboardContent,
+      },
+      {
+        path: 'tickets',  // Correctly formatted path
         name: 'tickets',
         component: Tickets
       },
       {
-        path: 'replies',  // Change from '/dashboard/replies' to 'replies'
+        path: 'replies',  // Correctly formatted path
         name: 'replies',
         component: CannedReplies
       }
     ]
+  },
+  {
+    path: '/dashboard/tickets/new',
+    name: 'create_ticket',
+    component: CreateTicket,
+    meta: { requiresAuth: true }
   },
   {
     path: '/admin/department',
@@ -106,10 +123,34 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/dashboard/admin/settings',
-    name: 'Settings',
-    component: Settings,
+    path: '/dashboard/admin/priorities/edit/:priorityId',
+    name: 'edit_priorities',
+    component: EditPriorities,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/dashboard/admin/settings',
+    name: 'SettingsContent',
+    component: SettingsContent,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',  // Route to match '/dashboard/admin/settings/general'
+        name: 'settings',
+        component: Settings,
+      },
+      {
+        path: 'general',  // Route to match '/dashboard/admin/settings/general'
+        name: 'general',
+        component: General,
+      },
+      {
+        path: 'outgoing_mail',
+        name: 'outgoing_mail',
+        component: Outgoing_mail,
+      }
+      // Add other settings related child routes here
+    ]
   },
   {
     path: '/dashboard/admin/translate',
@@ -138,13 +179,18 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const loggedIn = !!auth.currentUser;
-  console.log(`Navigating to: ${to.name}, loggedIn: ${loggedIn}`);
-  if (to.meta.requiresAuth && !loggedIn) {
-    next('/login');
-  } else {
-    next();
-  }
+  const auth = getAuth();
+
+  // Wait for Firebase Auth to initialize before making any route decisions
+  onAuthStateChanged(auth, (user) => {
+    if (to.meta.requiresAuth && !user) {
+      // If the route requires authentication and the user is not logged in, redirect to the login page
+      next('/login');
+    } else {
+      // If the user is logged in or the route doesn't require authentication, proceed as normal
+      next();
+    }
+  });
 });
 
 

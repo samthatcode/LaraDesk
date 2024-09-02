@@ -1,14 +1,32 @@
-<script setup>
-import HelloWorld from './components/Dashboard.vue'
-
-</script>
-
 <template>
   <v-app>
-    <RouterView />
+    <sidebar>
+      <RouterView />
+    </sidebar>
   </v-app>
 </template>
 
+<script>
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from 'vue-router';
+import sidebar from './components/Layouts/Sidebar.vue'
+export default {
+  setup() {
+    const router = useRouter();
+    const auth = getAuth();
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.push({ name: 'login' });
+      }
+    });
+
+    return {
+      router,
+    };
+  },
+};
+</script>
 <style scoped>
 header {
   line-height: 1.5;
