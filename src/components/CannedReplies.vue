@@ -95,81 +95,80 @@
     </v-main>
   </v-app>
 </template>
-  
-  <script>
-    import { auth } from '../firebase'
-    import { RouterLink } from 'vue-router'
 
-    export default {
-      data() {
-        return {
-          drawer: true,
-          search: '',
-          sort: '',
-          createdAt: '',
-          sortOptions: ['Title', 'Shared'],
-          cannedReplies: [
-            { title: 'hi', shared: true },
-            { title: 'Celeste Salazar', shared: true },
-            { title: 'fgfdgzdfgh', shared: false },
-            { title: 'Testing', shared: true },
-            { title: 'sddcdc', shared: true }
-          ]
-        }
-      },
-      methods: {
-        async logout() {
-          try {
-            await auth.signOut()
-            this.$router.push('/')
-          } catch (error) {
-            console.log(error.message)
-          }
-        }
+<script>
+import { auth } from '../firebase'
+
+export default {
+  data() {
+    return {
+      drawer: true,
+      search: '',
+      sort: '',
+      createdAt: '',
+      sortOptions: ['Title', 'Shared'],
+      cannedReplies: [
+        { title: 'hi', shared: true },
+        { title: 'Celeste Salazar', shared: true },
+        { title: 'fgfdgzdfgh', shared: false },
+        { title: 'Testing', shared: true },
+        { title: 'sddcdc', shared: true }
+      ]
+    }
+  },
+  methods: {
+    async logout() {
+      try {
+        await auth.signOut()
+        this.$router.push('/')
+      } catch (error) {
+        console.log(error.message)
       }
     }
+  }
+}
 </script>
-  
-  <style scoped>
-    .canned-replies {
-      padding: 20px;
-      background-color: #f5f7fb;
-    }
 
-    .canned-replies-title {
-      font-size: 24px;
-      color: #2c3e50;
-      font-weight: bold;
-    }
+<style scoped>
+.canned-replies {
+  padding: 20px;
+  background-color: #f5f7fb;
+}
 
-    .create-button {
-      text-transform: none;
-    }
+.canned-replies-title {
+  font-size: 24px;
+  color: #2c3e50;
+  font-weight: bold;
+}
 
-    .search-input,
-    .sort-select,
-    .created-at-select {
-      background-color: white;
-    }
+.create-button {
+  text-transform: none;
+}
 
-    .reply-item {
-      background-color: #ffffff;
-      border-bottom: 1px solid #e0e0e0;
-      padding: 16px 0;
-      cursor: pointer;
-    }
+.search-input,
+.sort-select,
+.created-at-select {
+  background-color: white;
+}
 
-    .reply-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.reply-item {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 0;
+  cursor: pointer;
+}
 
-    .reply-details {
-      display: flex;
-      flex-direction: column;
-      width: 50%;
-    }
+.reply-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reply-details {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
 
 .reply-title {
   font-size: 18px;
@@ -210,6 +209,7 @@
 .arrow-icon {
   margin-left: auto;
 }
+
 @media (max-width: 768px) {
   .create-button {
     width: 100%; /* Full width on smaller screens */
@@ -271,9 +271,9 @@
     margin-right: 100px; /* Adjust the margin for medium screens */
   }
 }
-    @media (min-width: 961px) {
-      .reply-admin {
-        margin-right: 330px; /* Full margin as per your original code */
-      }
-    }
+@media (min-width: 961px) {
+  .reply-admin {
+    margin-right: 330px; /* Full margin as per your original code */
+  }
+}
 </style>

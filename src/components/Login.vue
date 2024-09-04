@@ -1,13 +1,10 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <v-container fluid fill-height class="d-flex align-center justify-center">
     <v-row class="login-row" align="center" justify="center">
       <!-- Image Side -->
       <v-col cols="6" md="6" class="d-flex justify-center align-center">
-        <v-img
-          src="https://via.placeholder.com/600x800" 
-          class="login-image"
-          contain
-        ></v-img>
+        <v-img src="https://via.placeholder.com/600x800" class="login-image" contain></v-img>
       </v-col>
 
       <!-- Login Form Side -->
@@ -43,30 +40,11 @@
               dense
               class="mb-4"
             />
-            <v-btn
-              type="submit"
-              color="primary"
-              class="mt-4"
-              large
-            >
-              Login
-            </v-btn>
-            <v-btn
-              @click="goToSignUp"
-              text
-              class="mt-2"
-              large
-            >
+            <v-btn type="submit" color="primary" class="mt-4" large> Login </v-btn>
+            <v-btn @click="goToSignUp" text class="mt-2" large>
               Don't have an account? Sign Up
             </v-btn>
-            <v-btn
-              @click="goToWelcome"
-              text
-              class="mt-2"
-              large
-            >
-              Go to Landing Page
-            </v-btn>
+            <v-btn @click="goToWelcome" text class="mt-2" large> Go to Landing Page </v-btn>
           </v-form>
           <v-dialog v-model="loading" persistent max-width="290">
             <v-card>
@@ -85,9 +63,9 @@
 </template>
 
 <script>
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
-import { useToast } from 'vue-toastification';
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../firebase'
+import { useToast } from 'vue-toastification'
 
 export default {
   data() {
@@ -95,30 +73,30 @@ export default {
       email: '',
       password: '',
       loading: false
-    };
+    }
   },
   methods: {
     async login() {
-      const toast = useToast();
-      this.loading = true;
+      const toast = useToast()
+      this.loading = true
       try {
-        await signInWithEmailAndPassword(auth, this.email, this.password);
-        this.$router.push('/dashboard');
-        toast.success('Successfully logged in!');
+        await signInWithEmailAndPassword(auth, this.email, this.password)
+        this.$router.push('/dashboard')
+        toast.success('Successfully logged in!')
       } catch (error) {
-        toast.error(`Login failed: ${error.message}`);
+        toast.error(`Login failed: ${error.message}`)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
     goToSignUp() {
-      this.$router.push('/signup');
+      this.$router.push('/signup')
     },
     goToWelcome() {
-      this.$router.push('/');
+      this.$router.push('/')
     }
   }
-};
+}
 </script>
 
 <style scoped>
